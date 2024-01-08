@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="https://unpkg.com/vue@3.0.11"></script>
+</head>
+
+<body>
+    <hr />
+    <div id="main">
+        <div id="list" v-if="UI == 'main'">
+            <p>商家頁面</p>
+            <div>
+                <button @click="Login(Merchant)">登錄</button>
+            </div>
+            <h1>商品列表</h1>
+            <table border="1">
+                <tr><td>編號</td><td>商品名稱</td><td>商品介紹</td><td>價格</td><td>購買數量</td></tr>
+                <tr v-for="job in dat">
+                    <td>{{ job.name }}</td>
+                    <td>{{ job.intro }}</td>
+                    <td>{{ job.price }}</td>
+                    <td>{{ job.stock }}</td>
+                    <td>{{ job.sid }}</td>
+                    <!-- <td><button @click="addToCart(job.id)">加入購物車</button></td> -->
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const todoApp = Vue.createApp({
+            data() {
+                return {
+                    UI: 'main',
+                    dat: [],
+                    cart: [],
+                    User_data: {
+                        id: -1,
+                        goodName: '',
+                        goodContent: '',
+                        price: '',
+                        buyNum:'',
+                        totalPrice:''
+                    }
+                };
+            },
+            methods: {
+                loadList: function () {
+                    this.UI = 'main';
+                    this.loadProducts(); // Load product data from PHP backend
+                },
+                // loadCart: function () {
+                //     this.UI = 'cart';
+                //     this.loadProducts_Cart();
+                // },
+                // loadBoughtprod: function () {
+                //     this.UI = 'bought_products';
+                //     this.loadProducts_Bought_products(); // Load product data from PHP
+                // },
+                loadProducts: function () {
+                    const that = this;
+                    fetch('http://localhost:3000/products/', {
+                        method: "GET"
+                    })
+                    .then(function(response) {
+                        return response.text();
+                    })
+                    .then(function(data) {
+                        console.log(JSON.parse(data).data);
+                        that.dat = JSON.parse(data).data;
+                    });
+                },
+                Login: function(Merchant) {
+                    // let mydat = new FormData();
+                    // mydat.append( "dat", JSON.stringify(this.User_data) );
+
+                    // fetch("http://localhost:3000/user/login", {
+                    //     method: "POST",
+                    //     body: ""
+                    // })
+                    window.location.href = "./Merchant_Login.html";
+                }
+
+            },
+            created() {
+                this.loadProducts();
+                // this.loadProducts_Cart();
+                // this.loadProducts_Bought_products();
+            },
+        }).mount("#main");
+    </script>
+</body>
+</html>

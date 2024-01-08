@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script type="text/javascript" src="https://unpkg.com/vue@3.0.11"></script>
+</head>
+<body>
+    <div id="main">
+        <!-- <button @click="Register()">注冊</button> -->
+        <a href="./Merchant_Register.html">注冊</a>
+        <p>商家登錄</p>
+        名稱： <input type="text" v-model="User_Data.username"> <br>
+        密碼： <input type="password" v-model="User_Data.password"> <br>
+        <button @click="Login()">登錄</button>
+    </div>
+
+
+    <script>
+        const todoApp = Vue.createApp({
+            data() {
+                return {
+                    User_Data: {
+                        username: "",
+                        password: "",
+                        role: 1
+                    }
+                };
+            },
+            methods: {
+                Login: function() {
+                    let mydat = new FormData();
+                    mydat.append( "dat", JSON.stringify(this.User_Data) );
+
+                    fetch("http://localhost:3000/users/login", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(this.User_Data)
+                    })
+                    .then((res) => {
+                        return res.text();
+                    })
+                    .then((data) => {
+                        console.log("ok");
+                        console.log(data);
+                    })
+                },
+                // Register: function() {
+                //     window.location.href = "./Merchant_Register.html";
+                // }
+
+            },
+            // created() {
+                // this.loadProducts();
+            // },
+        }).mount("#main");
+    </script>
+</body>
+</html>

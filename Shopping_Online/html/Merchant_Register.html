@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script type="text/javascript" src="https://unpkg.com/vue@3.0.11"></script>
+</head>
+<body>
+    <div id="main">
+        <p>商家注冊</p>
+        名稱： <input type="text" v-model="User_Data.username"> <br>
+        密碼： <input type="password" v-model="User_Data.password"> <br>
+        <button @click="Register()">注冊</button>
+    </div>
+
+
+    <script>
+        const todoApp = Vue.createApp({
+            data() {
+                return {
+                    User_Data: {
+                        username: "",
+                        password: "",
+                        role: 1
+                    }
+                };
+            },
+            methods: {
+                Register: function() {
+                    let mydat = new FormData();
+                    mydat.append( "dat", JSON.stringify(this.User_Data) );
+
+                    console.log("y");
+                    fetch("http://localhost:3000/users/", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        // body: mydat
+                        body: JSON.stringify(this.User_Data)
+                    })
+                    .then((res) => {
+                        return res.text();
+                    })
+                    .then((data) => {
+                        console.log("ok");
+                        console.log(data);
+                    })
+                }
+
+            }
+            // created() {
+                // this.loadProducts();
+            // },
+        }).mount("#main");
+    </script>
+</body>
+</html>

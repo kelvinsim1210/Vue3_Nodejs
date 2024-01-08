@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script type="text/javascript" src="https://unpkg.com/vue@3.0.11"></script>
+</head>
+<body>
+    <div id="main">
+        <p>商品</p>
+        <button @click="My_Product()">我的商品</button>
+        <button @click="Add_Product()">新增商品</button>
+        <!-- <button @click="Add_Product()">新增商品</button> -->
+
+        <button @check()>check</button>
+        <div v-if="UI.My_Products">
+            <table>
+                <tr>
+                    <td>商品名字</td>
+                    <td>商品詳情</td>
+                    <td>商品價格</td>
+                    <td>商品庫存</td>
+                    <td>商家</td>
+                </tr>
+                <tr v-for="(value, index) in Products_Data">
+                    <td>{{ value.name }}</td>
+                    <td>{{ value.intro }}</td>
+                    <td>{{ value.price }}</td>
+                    <td>{{ value.stock }}</td>
+                    <td>{{ value.sid }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div v-if="UI.Add_Products">
+            商品名稱： <input type="text" v-model="Product_Data.name"> <br>
+            商品詳情： <input type="text" v-model="Product_Data.intro"> <br>
+            價格： <input type="text" v-model="Product_Data.price"> <br>
+            庫存： <input type="text" v-model="Product_Data.stock"> <br>
+            <button @Add_Products()>新增商品</button>
+        </div>
+    </div>
+
+
+    <script>
+        const todoApp = Vue.createApp({
+            data() {
+                return {
+                    UI: {
+                        My_Products: false
+                    },
+                    Products_Data: [],
+                    Product_Data: {
+                        name: "",
+                        intro: "",
+                        price: "",
+                        stock: "",
+                        sid: ""
+                    }
+                };
+            },
+            methods: {
+                My_Product: function() {
+                    const that = this;
+                    // let mydat = new FormData();
+                    // mydat.append( "dat", JSON.stringify(this.User_Data) );
+
+                    console.log("y");
+                    fetch("http://localhost:3000/products/", {
+                        method: "GET",
+                        headers: {
+                          "Content-Type": "application/json",
+                        }
+                        // body: mydat
+                        // body: JSON.stringify(this.User_Data)
+                    })
+                    .then((res) => {
+                        return res.text();
+                    })
+                    .then((data) => {
+                        console.log("ok");
+                        console.log(data);
+                        that.Products_Data = JSON.parse(data).data;
+                        console.log(that.Products_Data);
+                        that.UI.My_Products = true;
+                    })
+                }
+
+            }
+            // created() {
+                // this.loadProducts();
+            // },
+        }).mount("#main");
+    </script>
+</body>
+</html>
